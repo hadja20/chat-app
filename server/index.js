@@ -10,17 +10,24 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  // console.log('a user connected');
+  var user;
+
+  socket.on('nickname', (nickname) => {
+    user = nickname;
+    io.emit('nickname', nickname);
+  })
+
   socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('chat message',msg);
+    io.emit('chat message', msg, user);
   });
-  
+
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    //console.log('user disconnected');
+    io.emit('disconnection', user);
   });
 });
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(5000, () => {
+  console.log('listening on *:5000');
 });

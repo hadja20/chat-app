@@ -82,9 +82,10 @@
             if (input.value.startsWith('/nick')) {
                 socket.emit('nickname', input.value.split(' ')[1]);
 
+            } else if (input.value.startsWith('/channel')) {
+                socket.emit('create channel', input.value.split(' ')[1]);
             } else if (input.value) {
                 socket.emit('chat message', input.value);
-
             }
             input.value = '';
         });
@@ -107,10 +108,9 @@
 
         socket.on('disconnection', function (user) {
             var item = document.createElement('li');
-            item.textContent = user + " has left the conversation";
+            item.textContent = user + " left the conversation";
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
-
         })
     </script>
 </body>

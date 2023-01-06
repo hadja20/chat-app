@@ -5,16 +5,35 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+
+let channels = [];
+let users = [];
+
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/channels', (req, res) => {
+  res.render('channels', { channels: channels })
+});
+
+app.get('/:channel', (res, req) => {
+  res.render('channel', { channel: req.params.channel })
+
+});
+
 io.on('connection', (socket) => {
-  // console.log('a user connected');
   var user;
 
   socket.on('nickname', (nickname) => {
-    user = nickname;
+    const user = {
+      nickname,
+      id: socket.id
+    };
+
+    users.push(user);
+    console.log(`${user.nickname} has joined the conversation`);
     io.emit('nickname', nickname);
   })
 
@@ -22,8 +41,13 @@ io.on('connection', (socket) => {
     io.emit('chat message', msg, user);
   });
 
+  socket.on('create channel', (room) => {
+    socket.join(room);
+    console.log(`channel ${room} created`);
+    console.log(socket.rooms)
+  });
+
   socket.on('disconnect', () => {
-    //console.log('user disconnected');
     io.emit('disconnection', user);
   });
 });

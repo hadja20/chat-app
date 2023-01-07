@@ -3,24 +3,20 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const cors = require('cors');
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000"
+  }
+});
 
 
 let channels = [];
 let users = [];
 
-
+app.use(cors());
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
-});
-
-app.get('/channels', (req, res) => {
-  res.render('channels', { channels: channels })
-});
-
-app.get('/:channel', (res, req) => {
-  res.render('channel', { channel: req.params.channel })
-
 });
 
 io.on('connection', (socket) => {
@@ -31,14 +27,20 @@ io.on('connection', (socket) => {
       nickname,
       id: socket.id
     };
-
     users.push(user);
-    console.log(`${user.nickname} has joined the conversation`);
+    console.log(users)
+    console.log(`${user.nickname} has joined the server`);
     io.emit('nickname', nickname);
   })
 
+  socket.on('message', (data) => {
+    io.emit('Msg response', data);
+
+  });
+
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg, user);
+    console.log("message: " + msg);
   });
 
   socket.on('create channel', (room) => {
@@ -49,6 +51,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     io.emit('disconnection', user);
+    console.log(user + ' disconnected')
   });
 });
 

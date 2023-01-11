@@ -3,7 +3,7 @@ import React from 'react';
 function SideBar() {
 
     return (<div className="chat__sidebar">
-        <h2>Open Chat</h2>
+        <h2>Chat App</h2>
 
         <div>
             <h4 className="chat__header">ACTIVE USERS</h4>

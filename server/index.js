@@ -1,30 +1,53 @@
+
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const cors = require('cors');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const authRoutes = require('./routes/auth');
+const userRoutes= require('./routes/user')
+
+app.use(express.json());
+app.use("/auth", authRoutes);
+app.use(userRoutes);
+
+
+mongoose.set('strictQuery', true);
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("DB OK!");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000"
+    origin: process.env.URL_CLIENT
   }
 });
 
 
-let channels = [];
 let users = [];
 
 app.use(cors());
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.send("Server OK")
+  //res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
   var user;
 
   socket.on('nickname', (nickname) => {
-    const user = {
-      nickname,
+    user = {
+      nickname: nickname,
       id: socket.id
     };
     users.push(user);
@@ -35,6 +58,7 @@ io.on('connection', (socket) => {
 
   socket.on('message', (data) => {
     io.emit('Msg response', data);
+    console.log('message')
 
   });
 
@@ -51,10 +75,12 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     io.emit('disconnection', user);
-    console.log(user + ' disconnected')
+    console.log(user.nickname + ' disconnected')
   });
 });
 
-server.listen(5000, () => {
-  console.log('listening on *:5000');
+server.listen(process.env.PORT, () => {
+  console.log(`listening on *:${process.env.PORT}`);
 });
+
+

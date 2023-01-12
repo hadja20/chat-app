@@ -5,7 +5,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Page from './components/Chat/Page';
 import socketIO from 'socket.io-client';
-const socket = socketIO.connect('http://localhost:5000');
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+const socket = socketIO.connect(process.env.REACT_APP_BASE_URL);
 
 function App() {
 
@@ -15,6 +17,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home socket={socket} />}></Route>
           <Route path="/chat" element={<Page socket={socket} />}></Route>
+          <Route path="/login" element={<Login socket={socket} />}></Route>
+          <Route path="/register" element={<Register socket={socket} />}></Route>
         </Routes>
       </div>
     </BrowserRouter>

@@ -39,24 +39,22 @@ const io = new Server(server, {
 });
 
 
-let users = [];
-
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
-  var user;
+  var user_;
 
-  socket.on('nickname', (nickname) => {
-    user = {
-      nickname: nickname,
-      id: socket.id
-    };
-    users.push(user);
-    console.log(users)
-    console.log(`${user.nickname} has joined the server`);
-    io.emit('nickname', nickname);
+  socket.join("general")
+  console.log(socket.adapter.rooms);
+
+
+
+  socket.on('join', (user) => {
+    user_ = user
+    console.log(`${user} has joined the server`);
+    io.emit('join', user);
   })
 
   socket.on('message', (data) => {
@@ -77,8 +75,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    io.emit('disconnection', user);
-    console.log(user + ' disconnected')
+    io.emit('disconnection', user_);
+    console.log(user_ + ' disconnected')
   });
 });
 

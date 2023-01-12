@@ -21,7 +21,8 @@ code {
   font-family: 'Poppins', sans-serif;
 }
 
-.home__container {
+.home__container,
+.login__container {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -38,12 +39,14 @@ code {
   margin-bottom: 30px;
 }
 
-.username__input {
+.username__input,
+.password__input {
   padding: 10px;
   width: 50%;
 }
 
-.home__cta {
+.home__cta,
+.login__cta {
   width: 200px;
   padding: 10px;
   font-size: 16px;
@@ -53,6 +56,7 @@ code {
   outline: none;
   border: none;
   border-radius: 5px;
+  margin-top: 10px;
 }
 
 .chat {
@@ -192,4 +196,14 @@ code {
   bottom: 50px;
   font-size: 13px;
   font-style: italic;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-control {
+  margin-top: 10px;
 }

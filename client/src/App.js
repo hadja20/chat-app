@@ -2,7 +2,6 @@
 import './App.css';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
 import Page from './components/Chat/Page';
 import socketIO from 'socket.io-client';
 import Login from './components/Auth/Login';
@@ -15,9 +14,8 @@ function App() {
     <BrowserRouter>
       <div>
         <Routes>
-          <Route path="/" element={<Home socket={socket} />}></Route>
+          <Route path="/" element={<Login socket={socket} />}></Route>
           <Route path="/chat" element={<Page socket={socket} />}></Route>
-          <Route path="/login" element={<Login socket={socket} />}></Route>
           <Route path="/register" element={<Register socket={socket} />}></Route>
         </Routes>
       </div>

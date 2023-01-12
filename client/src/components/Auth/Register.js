@@ -31,7 +31,7 @@ const Register = () => {
             }).then(response => {
                 console.log(response)
                 console.log('register ok!');
-                navigate('/chat');
+                navigate('/');
             }).catch(err => {
                 console.log("error");
                 console.log(err);

@@ -1,14 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Auth from '../Auth/Auth';
 
-const Body = ({ messages }) => {
+const Body = ({ messages, socket }) => {
 
     const navigate = useNavigate();
+    const { logout, user } = Auth();
 
     const handleLeaveChat = () => {
         localStorage.removeItem('username');
-        navigate('/login');
+        logout();
+        navigate('/');
         window.location.reload();
+        socket.emit('disconnection', user)
     };
 
     return (

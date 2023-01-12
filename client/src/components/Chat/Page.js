@@ -16,7 +16,7 @@ const Page = ({ socket }) => {
         <div className="chat">
             <SideBar />
             <div className="chat__main">
-                <Body messages={messages} />
+                <Body messages={messages} socket={socket} />
                 <Footer socket={socket} />
             </div>
         </div>

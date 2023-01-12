@@ -3,7 +3,7 @@ import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from './Auth';
 
-const Login = () => {
+const Login = ({ socket }) => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -23,9 +23,9 @@ const Login = () => {
             username: username,
             password: password
         }).then(res => {
-            console.log('login ok!');
-            console.log(res.data)
             setToken(res.data.user, res.data.access_token);
+            
+            socket.emit('join', username);
             navigate('/chat');
         }).catch(err => {
             alert.hidden = false;

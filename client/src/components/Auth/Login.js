@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { React, useState , useEffect} from 'react';
+import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from './Auth';
 
@@ -10,8 +10,6 @@ const Login = () => {
     const [alert, setAlert] = useState('');
     const navigate = useNavigate();
     const { setToken } = Auth();
-
-
 
     useEffect(() => {
         setAlert(document.getElementById('alert'))
@@ -46,7 +44,7 @@ const Login = () => {
 
                         <h2 className="login__header">SIGN IN</h2>
                         <div className="alert alert-danger" id="alert" role="alert" hidden>
-                            passwords did not match
+
                         </div>
                         <input
                             type="text"

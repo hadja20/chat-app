@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { React, useState } from 'react';
+import { React, useState , useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from './Auth';
 
@@ -7,10 +7,15 @@ const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [alert, setAlert] = useState('');
     const navigate = useNavigate();
     const { setToken } = Auth();
 
 
+
+    useEffect(() => {
+        setAlert(document.getElementById('alert'))
+    }, []);
     const submit = async (e) => {
 
         console.log("submit");
@@ -25,8 +30,8 @@ const Login = () => {
             setToken(res.data.user, res.data.access_token);
             navigate('/chat');
         }).catch(err => {
-            console.log("error");
-            console.log(err);
+            alert.hidden = false;
+            alert.innerHTML = err.response.data.message;
         })
 
 
@@ -40,6 +45,9 @@ const Login = () => {
                     <div className="card-body">
 
                         <h2 className="login__header">SIGN IN</h2>
+                        <div className="alert alert-danger" id="alert" role="alert" hidden>
+                            passwords did not match
+                        </div>
                         <input
                             type="text"
                             name="username"

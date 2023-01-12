@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import Auth from './Auth';
 
 const Register = () => {
 
@@ -10,7 +9,6 @@ const Register = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [alert, setAlert] = useState('');
     const navigate = useNavigate();
-    //const { http, saveToken } = Auth();
 
 
     useEffect(() => {
@@ -33,8 +31,8 @@ const Register = () => {
                 console.log('register ok!');
                 navigate('/');
             }).catch(err => {
-                console.log("error");
-                console.log(err);
+                alert.hidden = false;
+                alert.innerHTML = err.response.data.message;
             })
 
         }

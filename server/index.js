@@ -3,17 +3,22 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 const http = require('http');
+
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const cors = require('cors');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth');
-const userRoutes= require('./routes/user')
+const userRoutes = require('./routes/user')
 
 app.use(express.json());
+
+
+app.use(cors({ credentials: true, origin: process.env.URL_CLIENT }));
+
 app.use("/auth", authRoutes);
 app.use(userRoutes);
+
 
 
 mongoose.set('strictQuery', true);
@@ -36,10 +41,8 @@ const io = new Server(server, {
 
 let users = [];
 
-app.use(cors());
 app.get('/', (req, res) => {
-  res.send("Server OK")
-  //res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
@@ -75,7 +78,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     io.emit('disconnection', user);
-    console.log(user.nickname + ' disconnected')
+    console.log(user + ' disconnected')
   });
 });
 

@@ -1,11 +1,12 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
-const channel=new mongoose.Schema({
+const channel = new mongoose.Schema({
 
-    id: Number,
+    id: String,
     name: String,
+    users: Array
 });
 
-const Channel=mongoose.model('channel',channel);
+const Channel = mongoose.model('channel', channel);
 
-module.exports={Channel}
+module.exports = Channel 

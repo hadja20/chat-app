@@ -1,9 +1,11 @@
 
 const router = require("express").Router()
-const {getAllUsers  } = require('../controllers/userController');
-const auth=require('../middleware/auth')
+const { getAllUsers, changeUsername, joinChannel } = require('../controllers/userController');
+const auth = require('../middleware/auth')
 
 
-router.get('/users',auth,getAllUsers);
+router.get('/users', getAllUsers);
+router.post('/user/:username', changeUsername);
+router.post('/join/:id/:name', joinChannel);
 
-module.exports=router;
+module.exports = router;

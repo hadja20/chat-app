@@ -24,15 +24,13 @@ const Login = ({ socket }) => {
             password: password
         }).then(res => {
             setToken(res.data.user, res.data.access_token);
-            
-            socket.emit('join', username);
+
+            socket.emit('join server', username);
             navigate('/chat');
         }).catch(err => {
             alert.hidden = false;
             alert.innerHTML = err.response.data.message;
-        })
-
-
+        });
     }
 
     return (

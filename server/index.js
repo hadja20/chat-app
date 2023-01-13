@@ -9,7 +9,8 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/user');
+const channelRoutes = require('./routes/channel');
 
 app.use(express.json());
 
@@ -18,6 +19,7 @@ app.use(cors({ credentials: true, origin: process.env.URL_CLIENT }));
 
 app.use("/auth", authRoutes);
 app.use(userRoutes);
+app.use(channelRoutes);
 
 
 
@@ -46,16 +48,12 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   var user_;
 
-  socket.join("general")
-  console.log(socket.adapter.rooms);
 
-
-
-  socket.on('join', (user) => {
+  socket.on('join server', (user) => {
     user_ = user
     console.log(`${user} has joined the server`);
     io.emit('join', user);
-  })
+  });
 
   socket.on('message', (data) => {
     io.emit('Msg response', data);

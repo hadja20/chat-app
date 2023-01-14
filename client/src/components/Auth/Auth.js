@@ -1,9 +1,9 @@
 import axios from 'axios';
-import {  useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
-    
+
     const getToken = () => {
         const tokenString = sessionStorage.getItem('token');
         const userToken = JSON.parse(tokenString);
@@ -11,7 +11,7 @@ const Auth = () => {
     }
 
     const getUser = () => {
-        const userString = sessionStorage.getItem('user');
+        const userString = sessionStorage.getItem('username');
         const user_detail = JSON.parse(userString);
         return user_detail;
     }
@@ -20,9 +20,10 @@ const Auth = () => {
     const [user, setUser] = useState(getUser());
     const navigate = useNavigate();
 
-    const saveToken = (user, token) => {
+    const saveToken = (user, token, socket) => {
         sessionStorage.setItem('token', JSON.stringify(token));
-        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('username', JSON.stringify(user));
+        sessionStorage.setItem('socket', JSON.stringify(socket));
         setToken(token);
         setUser(user);
         navigate('/');
@@ -40,7 +41,7 @@ const Auth = () => {
             "Authorization": `Bearer ${token}`
         }
     });
-    
+
     return {
         setToken: saveToken,
         token,

@@ -35,6 +35,7 @@ const getAllUsersOfChannel = async (req, res) => {
         const channel = await Channel.findOne({ name: name });
 
         const users = channel.users;
+        console.log(users);
         return res.status(200).json({ "users": users });
 
     } catch (err) {

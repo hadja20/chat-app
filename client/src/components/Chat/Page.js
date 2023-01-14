@@ -10,11 +10,12 @@ const Page = ({ socket }) => {
 
     useEffect(() => {
         socket.on('Msg response', (data) => setMessages([...messages, data]));
+
     }, [socket, messages]);
 
     return (
         <div className="chat">
-            <SideBar />
+            <SideBar socket={socket} />
             <div className="chat__main">
                 <Body messages={messages} socket={socket} />
                 <Footer socket={socket} />

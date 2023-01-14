@@ -14,18 +14,18 @@ const Login = ({ socket }) => {
     useEffect(() => {
         setAlert(document.getElementById('alert'))
     }, []);
+
     const submit = async (e) => {
 
-        console.log("submit");
         e.preventDefault();
 
         await axios.post(process.env.REACT_APP_BASE_URL + `auth/login`, {
             username: username,
             password: password
         }).then(res => {
-            setToken(res.data.user, res.data.access_token);
-
-            socket.emit('join server', username);
+            const user = res.data.user;
+            setToken(res.data.user, res.data.access_token, socket.id);
+            socket.emit('join server', user);
             navigate('/chat');
         }).catch(err => {
             alert.hidden = false;
@@ -71,3 +71,4 @@ const Login = ({ socket }) => {
 }
 
 export default Login;
+

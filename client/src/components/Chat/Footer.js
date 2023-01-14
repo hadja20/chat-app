@@ -3,15 +3,17 @@ import React, { useState } from 'react';
 const Footer = ({ socket }) => {
     const [message, setMessage] = useState('');
 
+    
     const SendMessage = (e) => {
         e.preventDefault();
-        if (message.trim() && localStorage.getItem('username')) {
+        if (message.trim() || localStorage.getItem('username')) {
             socket.emit('message', {
                 text: message,
                 name: localStorage.getItem('username'),
                 id: `${socket.id}${Math.random()}`,
                 socketID: socket.id,
             });
+            console.log(localStorage)
             console.log({ username: localStorage.getItem('username'), message });
             setMessage('');
         }

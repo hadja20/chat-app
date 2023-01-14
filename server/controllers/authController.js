@@ -25,7 +25,7 @@ const login = async (req, res) => {
             data: existUser
         }, SECRET_KEY, { expiresIn: 60 * 60 });
 
-        return res.status(200).json({ "user": username, "access_token": access_token });
+        return res.status(200).json({ "user": existUser, "access_token": access_token });
     }
     catch (error) {
         return res.status(401).json({ "error": error });

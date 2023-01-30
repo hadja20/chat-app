@@ -43,30 +43,20 @@ app.get('/', (req, res) => {
 });
 
 global.onLineUsers = new Map();
-let test = [];
-
 io.on('connection', (socket) => {
   var user_;
 
   global.chatSocket = socket;
 
   socket.on('join server', (user) => {
-    console.log('join server')
     user_ = user;
-    test.push(user);
     onLineUsers.set(user, socket.id);
     console.log(`${user_.username} has joined the server`);
     let transitString = JSON.stringify(Array.from(onLineUsers));
-
     io.emit("join server");
     io.emit("activeUsers", transitString);
-    console.log(test)
-
+    console.log(onLineUsers);
   });
-
-
-
-
 
   socket.on('message', (data) => {
     io.emit('Msg response', data);
@@ -85,6 +75,8 @@ io.on('connection', (socket) => {
     console.log("message: " + msg);
   });
 
+
+
   socket.on('create channel', (room) => {
     socket.join(room);
     console.log(`channel ${room} created`);
@@ -94,12 +86,18 @@ io.on('connection', (socket) => {
   socket.on('join channel', (user, name) => {
     socket.join(name);
     console.log(`${user.username} has joined ${name} channel`);
+  });
+
+  socket.on("deconnexion", () => {
+    onLineUsers.delete(user_);
+    let transitString = JSON.stringify(Array.from(onLineUsers));
+    io.emit('disconnection', transitString);
+    console.log("deconnexion");
+    console.log(onLineUsers);
   })
 
   socket.on('disconnect', () => {
-    io.emit('disconnection', user_);
-    onLineUsers.delete(user_);
-    console.log(' disconnected');
+    console.log("socket closed");
   });
 });
 
@@ -109,13 +107,6 @@ server.listen(process.env.PORT, () => {
 
 
 /*
-global.onlineUsers = new Map();
-io.on("connection", (socket) => {
-    global.chatSocket = socket;
-    socket.on("add-user", (userId) => {
-        onlineUsers.set(userId, socket.id);
-    });
-
     socket.on("send-msg", (data) => {
         const sendUserSocket = onlineUsers.get(data.to);
         if (sendUserSocket) {

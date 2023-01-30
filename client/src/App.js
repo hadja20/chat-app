@@ -18,7 +18,6 @@ function App() {
           <Route path="/" element={<Login socket={socket} />}></Route>
           <Route path="/chat" element={<Page socket={socket} />}></Route>
           <Route path="/register" element={<Register socket={socket} />}></Route>
-
           <Route path="/euzgyjdk" element={<Auth socket={socket} />}></Route>
         </Routes>
       </div>

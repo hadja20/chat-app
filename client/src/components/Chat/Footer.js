@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 
+import Auth from "../Auth/Auth";
 const Footer = ({ socket }) => {
     const [message, setMessage] = useState('');
+    const { user } = Auth();
 
-    
+
     const SendMessage = (e) => {
         e.preventDefault();
-        if (message.trim() || localStorage.getItem('username')) {
+        if (message.trim() || sessionStorage.getItem('user').username) {
             socket.emit('message', {
                 text: message,
-                name: localStorage.getItem('username'),
+                name: user.username,
                 id: `${socket.id}${Math.random()}`,
                 socketID: socket.id,
             });
-            console.log(localStorage)
-            console.log({ username: localStorage.getItem('username'), message });
             setMessage('');
         }
     };

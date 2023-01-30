@@ -2,6 +2,7 @@ import axios from 'axios';
 import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from './Auth';
+import Logo from '../../assets/logo123.png';
 
 const Login = ({ socket }) => {
 
@@ -37,12 +38,12 @@ const Login = ({ socket }) => {
         <>
             <form className="login__container" onSubmit={submit}>
 
+                <img src={Logo} style={{ height: 300, width: 300 }} alt="logo"></img>
+
                 <div className="card">
                     <div className="card-body">
-
                         <h2 className="login__header">SIGN IN</h2>
                         <div className="alert alert-danger" id="alert" role="alert" hidden>
-
                         </div>
                         <input
                             type="text"

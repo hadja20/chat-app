@@ -1,6 +1,6 @@
 const User = require('../models/user');
-
 const Channel = require('../models/channel');
+const { exitsUser, existChannel, isUserInChannel } = require('../controllers/utils/util');
 
 const getAllUsers = async (req, res) => {
     const users = await User.find({});
@@ -13,13 +13,12 @@ const changeUsername = async (req, res) => {
     try {
         const username = req.params.username;
         const newUsername = req.body.username;
-        const update = await User.where({ username: username }).updateOne({ username: newUsername });
+        const update = await User.where({ username }).updateOne({ username: newUsername });
         const user = await User.findOne({ username: newUsername });
 
         return res.status(200).json({ 'user': user });
 
     } catch (err) {
-
         return res.status(404).json({ "message": "User not found" });
 
     }
@@ -27,83 +26,77 @@ const changeUsername = async (req, res) => {
 }
 
 
-
-
 const joinChannel = async (req, res) => {
-    console.log(isInChannel("general", "63c1471137d3f0949de6671c"));
 
     try {
         const name = req.params.name;
         const id = req.params.id;
         const user = await User.findOne({ _id: id });
-        let data = await Channel.findOne({ name: name });
-        const members = data.users;
+        let isInChannel;
 
-        let canJoinCHannel = true;
-        for (let el of members) {
-            if (JSON.stringify(el) === JSON.stringify(user)) {
-                canJoinCHannel = false;
+
+        if (await exitsUser(id) && await existChannel(name)) {
+
+            await isUserInChannel(id, name).then(data => { isInChannel = data; console.log(isInChannel) });
+
+            if (!isInChannel) {
+
+                const channel = await Channel.findOne({ name }).updateOne({ $push: { users: user } });
+                const members = await Channel.findOne({ name });
+
+                return res.status(200).json({ "message": `${user.username} has joined the channel`, "users": members.users });
+
+            } else {
+
+                return res.status(200).json({ "message": "User has already joined the channel" })
             }
-        }
 
-        if (canJoinCHannel) {
-            const channel = await Channel.findOne({ name: name }).updateOne({ $push: { users: user } });
-            const members = await Channel.findOne({ name: name });
-            return res.status(200).json({ "message": `${user.username} has joined the channel`, "users": members.users });
+        } else if (existChannel(name)) {
+
+            return res.status(404).json({ "message": "User not found" });
+
         } else {
-            return res.status(200).json({ "message": "User has already joined the channel" });
+            return res.status(404).json({ "message": "Channel not found" });
+
         }
     } catch (err) {
-        console.log(err)
         return res.status(400).json({ "messsage": "Try again." });
     }
 }
 
-const quitChannel = (req, res) => {
+const quitChannel = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const id = req.params.id;
+        let isInChannel = null;
 
-    const name = req.params.name;
-    const id = req.params.id;
-    console.log(isInChannel("general", "63c1471137d3f0949de6671c"));
-    var channel;
-    Channel.findOne({ name: name }).then((data) => {
-        if (!data) {
-            return res.json({ "message": "Channel not found" });
+        if (exitsUser(id)) {
+
+            await isUserInChannel(id, name).then(data => isInChannel = data);
+            if (!isInChannel) {
+                return res.status(200).json({ "message": "User is not in channel" })
+
+            } else {
+                const user = await User.findOne({ _id: id });
+                const updateChannel = await Channel.findOneAndUpdate({ name }, { $pull: { users: user } });
+                const channel = await Channel.findOne({ name })
+                return res.status(200).json({ "message": `${user.username} left the channel succesfully`, "users": channel.users });
+
+            }
+
+        } else if (existChannel(name)) {
+
+            return res.status(404).json({ "message": "User not found" });
+
         } else {
-
-            channel = data;
-            let user;
-            User.findOne({ _id: id }).then(data => {
-                user = data;
-                if (!user) {
-                    return res.json({ "message": "User not found" });
-                } else {
-
-                    user = data;
-                    let members = channel.users;
-                    let isInChannel = false;
-                    for (let el of members) {
-                        if (JSON.stringify(el) === JSON.stringify(user)) {
-                            isInChannel = true;
-                        }
-                    }
-                    if (isInChannel) {
-                        Channel.findOneAndUpdate({ name: name }, { $pull: { users: user } }).then(data => {
-                            return res.status(200).json({ "message": "User left the channel succesfully" });
-                        });
-                    } else {
-                        return res.status(400).json({ "message": "User cannot left the channel" });
-                    }
-
-                }
-            }).catch(error => {
-                return res.status(400).json({ "message": "An error occured" });
-            });
+            return res.status(404).json({ "message": "Channel not found" });
 
         }
-    }).catch(error => {
-        return res.status(400).json({ "message": "An error occured" });
-    });
+    }
 
-
+    catch (err) {
+        return res.status(400).json({ "message": "Try again." })
+    }
 }
+
 module.exports = { getAllUsers, changeUsername, joinChannel, quitChannel }

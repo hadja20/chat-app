@@ -34,13 +34,7 @@ const Register = () => {
                 alert.hidden = false;
                 alert.innerHTML = err.response.data.message;
             })
-
         }
-
-
-
-
-
     }
 
     return (

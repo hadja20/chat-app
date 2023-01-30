@@ -11,18 +11,19 @@ const Auth = () => {
     }
 
     const getUser = () => {
-        const userString = sessionStorage.getItem('username');
+        const userString = sessionStorage.getItem('user');
         const user_detail = JSON.parse(userString);
         return user_detail;
     }
 
     const [token, setToken] = useState(getToken());
     const [user, setUser] = useState(getUser());
-    const navigate = useNavigate();
+
+    const navigate = useNavigate()
 
     const saveToken = (user, token, socket) => {
         sessionStorage.setItem('token', JSON.stringify(token));
-        sessionStorage.setItem('username', JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(user));
         sessionStorage.setItem('socket', JSON.stringify(socket));
         setToken(token);
         setUser(user);

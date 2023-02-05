@@ -63,6 +63,8 @@ const Login = ({ socket }) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+
+                        <a href='/register'> Sign up here</a>
                         <button className="login__cta">LOGIN</button>
                     </div>
                 </div>

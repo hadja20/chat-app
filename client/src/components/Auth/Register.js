@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../../assets/logo123.png';
 
 const Register = () => {
 
@@ -41,6 +42,8 @@ const Register = () => {
         <>
             <form className="login__container" onSubmit={register}>
 
+            <img src={Logo} style={{ height: 300, width: 300 }} alt="logo"></img>
+
                 <div className="card">
                     <div className="card-body">
 
@@ -76,6 +79,7 @@ const Register = () => {
                             value={passwordConfirmation}
                             onChange={(e) => setPasswordConfirmation(e.target.value)}
                         />
+                         <a href='/'> Sign in here</a>
                         <button className="login__cta">SIGN UP</button>
                     </div>
                 </div>

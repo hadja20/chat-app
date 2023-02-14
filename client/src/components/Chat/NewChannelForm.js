@@ -8,24 +8,23 @@ import Swal from 'sweetalert2';
 function NewChannelForm({ handleCloseModal }) {
 
 
-    const { http } = Auth();
+    const { http,user } = Auth();
     const [channelName, setChannelName] = useState([]);
 
     const createChannel = async (e) => {
         e.preventDefault();
-        await http.post(process.env.REACT_APP_BASE_URL + 'create/name', {
+        await http.post(process.env.REACT_APP_BASE_URL + `create/${user._id}`, {
             name: channelName
         }).then(response => {
-            console.log(response.data);
             Swal.fire({
                 icon: "success",
                 text: response.data.message,
                 confirmButtonColor: "#2c74d3"
             },)  
-        }).catch(error => {
+        }).catch(() => {
             Swal.fire({
-                icon: "success",
-                text: "Inscription Validée",
+                icon: "error",
+                text: "Cannot create channel",
                 confirmButtonColor: "#2c74d3"
             },)  
 

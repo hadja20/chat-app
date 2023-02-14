@@ -16,8 +16,13 @@ const message = new mongoose.Schema({
     message: {
         type: String,
         require: true
+    },
+
+    isChannel:{
+        type: Boolean,
+        require:true
     }
 });
 
 const Message = mongoose.model('Message', message);
-module.exports = { Message }
+module.exports = Message 

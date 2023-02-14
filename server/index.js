@@ -10,13 +10,14 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const channelRoutes = require('./routes/channel');
+const messageRoutes= require('./routes/message');
 
 app.use(express.json());
 app.use(cors({ credentials: true, origin: process.env.URL_CLIENT }));
 app.use("/auth", authRoutes);
 app.use(userRoutes);
 app.use(channelRoutes);
-
+app.use(messageRoutes);
 
 
 mongoose.set('strictQuery', true);
@@ -38,9 +39,6 @@ const io = new Server(server, {
 });
 
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
 
 global.onLineUsers = new Map();
 io.on('connection', (socket) => {

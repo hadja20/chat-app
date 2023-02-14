@@ -16,10 +16,22 @@ const HandleReceiver = () => {
         setReceiver(data);
     }
 
+    const saveIsChannel=(bool)=>{
+        sessionStorage.setItem('isChannel', bool);
+    }
+
+    const isChannel=()=>{
+        const isChannel= sessionStorage.getItem('isChannel');
+        return isChannel;
+    }
+
     return {
         setReceiver: saveUserReceiver,
         receiver,
-        getReceiver: getReceiver
+        getReceiver: getReceiver,
+        setIsChannel: saveIsChannel,
+        isChannel: isChannel
+        
     }
 
 
